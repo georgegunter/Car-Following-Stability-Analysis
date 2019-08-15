@@ -106,12 +106,12 @@ ylim([-radOutter-10,radOutter+10])
 
 %% Simulation:
 
-time = 0;
+
 for t=1:numSteps
     %% Do integration steps:
     clc
     disp(t)
-    time = time + dt;
+    
 %     lane_check_frequency = 5;
 %     if(mod(t,lane_check_frequency)==0)
 %         laneMat = laneCheck(Params,laneMat,stateMat,changing_params,dt);
@@ -119,7 +119,7 @@ for t=1:numSteps
     
     accel_vals = accelCalc(Params,laneMat,stateMat,RingRoad_Params);
     
-    t_decel = 2;
+    t_decel = 20;
     
     if(t >= 1 && t <= t_decel)
         accel_vals(1) = -(v_star/t_decel);
