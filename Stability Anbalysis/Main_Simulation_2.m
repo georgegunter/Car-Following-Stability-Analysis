@@ -1,7 +1,7 @@
 clear;clc
 
 %% Contains the ringroad parameters:
-RingRoad_Params.Road_Length = 100;
+RingRoad_Params.Road_Length = 75;
 RingRoad_Params.number_cars = 10;
 RingRoad_Params.number_lanes = 2;
 RingRoad_Params.trajectory_time = 75;
@@ -23,14 +23,16 @@ d0 = 4.5;
 x = 1.5;
 y = 2;
 
-wantUniform = true;
+wantUniform = true; % Gives a homogeneous platoon
 
 Params = zeros(n,6);
 if(wantUniform)
     for i=1:n
         Params(i,:) = [b,a,vm,d0,x,y];
     end
-else    
+else 
+    % Adds noise around the parameter set to create variability in driving
+    % behavior:
     for i=1:n
         b_i = b + normrnd(0,1);
         a_i = a + normrnd(0,.1);
@@ -60,10 +62,9 @@ laneMat = ones(n,1);
 posVals = zeros(n,numSteps);
 speedVals = zeros(n,numSteps);
 
-% laneMat = ones(n,number_lanes);
-% for l=2:number_lanes
-%     laneMat(:,l) = laneMat(:,l)*l;
-% end
+want_Lane_Chage = false;
+
+lane_check_frequency = 5; %How frequently a vehicle will check to see if it wants to change lanes
 
 accel_vals = zeros(n,1);
 
@@ -112,10 +113,14 @@ for t=1:numSteps
     clc
     disp(t)
     time = time + dt;
-%     lane_check_frequency = 5;
-%     if(mod(t,lane_check_frequency)==0)
-%         laneMat = laneCheck(Params,laneMat,stateMat,changing_params,dt);
-%     end
+    
+    if(want_Lane_Chage)
+   
+        if(mod(time,lane_check_frequency)==0)
+            laneMat = laneCheck(Params,laneMat,stateMat,changing_params,dt);
+        end
+        
+    end
     
     accel_vals = accelCalc(Params,laneMat,stateMat,RingRoad_Params);
     
