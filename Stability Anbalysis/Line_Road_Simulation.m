@@ -9,11 +9,17 @@ init_spacing = 20;
 
 lead_speed = V(init_spacing); % Need to have optimal velocity func in work space
 
-leader_speeds = ones(numSteps)*lead_speed;
+leader_speeds = ones(numSteps,1)*lead_speed;
+
+leader_speeds = leader_speeds + normrnd(0,.2,size(leader_speeds));
 
 follower_speeds = zeros(number_vehicles,numSteps);
 positions = zeros(number_vehicles,numSteps);
 spacings = zeros(number_vehicles,numSteps);
+
+follower_speeds(:,1) = leader_speeds(1);
+spacings(:,1) = init_spacing;
+positions(:,1) = cumsum(spacings(:,1));
 
 
 %% Individual vehicle driving parameters:
@@ -61,24 +67,13 @@ end
 %% Perform the simulation:
 
 time = 0;
-for t=1:numSteps
+for t=2:numSteps
     %% Do integration steps:
     clc
     disp(t)
     time = time + dt;
-    accel_Vals = zeros(number_vehicles,1);
     
-    accel_Vals
-   
-    
-    stateMat(:,2) = stateMat(:,2)+accel_vals*dt;
-    stateMat(:,1) = stateMat(:,1)+stateMat(:,2)*dt;
-     
-    for carNum=1:n
-        if(stateMat(carNum,1)>L)
-         stateMat(carNum,1) = stateMat(carNum,1)-L;
-        end
-    end
+    speedVals(1,
     
     posVals(:,t) = stateMat(:,1);
     speedVals(:,t) = stateMat(:,2);

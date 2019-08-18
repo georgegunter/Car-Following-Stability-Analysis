@@ -119,10 +119,8 @@ for t=1:numSteps
     posVals(:,t) = stateMat(:,1);
     speedVals(:,t) = stateMat(:,2);
     for c=1:n-1
-        spacingVals(c,t) = mod(posVals(c+1,t) - posVals(c,t),L);
-    end
-    
-    spacingVals(end,t) = mod(posVals(c+1,t) - posVals(c,t),L);
+        s = posVals(c+1,t) - posVals(c,t);
+        if(s<0)
             
         
         
