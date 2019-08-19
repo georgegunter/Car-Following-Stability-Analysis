@@ -1,8 +1,23 @@
-clear;clc
+% clear;clc
+clc
+close all
+
+
+b = 20; 
+a = 0.5; 
+% vm = 9.72;
+vm = 20;
+d0 = 2.23;
+
+obj_func = @(d) -string_stability([b,a,vm,d0],d);
+
+
+s_max_unstable  = fminunc(obj_func,0); % Solved via gradient method for given model params
 
 %% Contains the ringroad parameters:
-RingRoad_Params.Road_Length = 75;
-RingRoad_Params.number_cars = 10;
+
+RingRoad_Params.Road_Length = 23*s_max_unstable;
+RingRoad_Params.number_cars = 22;
 RingRoad_Params.number_lanes = 2;
 RingRoad_Params.trajectory_time = 75;
 RingRoad_Params.dt = .1;
@@ -16,19 +31,14 @@ dt = RingRoad_Params.dt; % Time step [s]
 numSteps = tf/dt;
 
 %% Individual vehicle driving parameters:
-b = 20; 
-a = 0.5; 
-vm = 9.72; 
-d0 = 4.5;
-x = 1.5;
-y = 2;
+
 
 wantUniform = true; % Gives a homogeneous platoon
 
-Params = zeros(n,6);
+Params = zeros(n,4);
 if(wantUniform)
     for i=1:n
-        Params(i,:) = [b,a,vm,d0,x,y];
+        Params(i,:) = [b,a,vm,d0];
     end
 else 
     % Adds noise around the parameter set to create variability in driving
@@ -38,9 +48,7 @@ else
         a_i = a + normrnd(0,.1);
         vm_i = vm + normrnd(0,1.5);
         d0_i = d0 + normrnd(0,.3);
-        x_i = x + normrnd(0,.05);
-        y_i = y + normrnd(0,.05);
-        Params(i,:) = [b_i,a_i,vm_i,d0_i,x_i,y_i];
+        Params(i,:) = [b_i,a_i,vm_i,d0_i];
     end
 end
 
@@ -92,23 +100,30 @@ for t=1:numSteps
         
     end
     
-    accel_vals = accelCalc(Params,laneMat,stateMat,RingRoad_Params);
+    accel_vals = accelCalc(Params,laneMat,stateMat,RingRoad_Params);    
     
-    t_decel = 5;
-    amount_decel = (v_star-2)/t_decel;
+%     t_decel = 10;
+%     amount_decel = (v_star-.1)/t_decel;
+%     
+%     if(time >= 0 && time <= t_decel)
+%         accel_vals(1) = -amount_decel;
+%         disp('Causing Breaking Event')
+%     end     
     
-    if(time >= 0 && time <= t_decel)
-        accel_vals(1) = -amount_decel;
-        disp('Causing Breaking Event')
-    end
+
+
+    stateMat(:,2) = stateMat(:,2)+accel_vals*dt;% Euler Step
+
     
     
-    if(want_Noise)
-        accel_vals = accel_vals + normrnd(0,0,size(accel_vals));
-    end
     
-    stateMat(:,2) = stateMat(:,2)+accel_vals*dt;
+    
     stateMat(:,1) = stateMat(:,1)+stateMat(:,2)*dt;
+ 
+    if(mod(t,round(1/dt))==0)
+        stateMat(:,1) = stateMat(:,1) + randntrunc(1,n,3)'*.25;
+    end
+    
      
     for carNum=1:n
         if(stateMat(carNum,1)>L)
@@ -126,14 +141,8 @@ for t=1:numSteps
             
         
         
-    end
-    
-    spacingVals(n,t) = posVals
-        
-    
-    
-
 end
+       
 
 %% Display the ring-road simulation:
 
@@ -230,14 +239,14 @@ ylabel('Speed')
 
 %% String Stability:
 
-s_vals = 0:.1:30;
-
-lambda_vals = string_stability(Params(,s_vals);
-
-figure()
-hold on
-plot(s_vals,lambda_vals,'LineWidth',2)
-plot(s_vals,zeros(size(s_vals)),'k--','LineWidth',.5)
+% s_vals = 0:.1:30;
+% 
+% lambda_vals = string_stability(Params(,s_vals);
+% 
+% figure()
+% hold on
+% plot(s_vals,lambda_vals,'LineWidth',2)
+% plot(s_vals,zeros(size(s_vals)),'k--','LineWidth',.5)
 
 
 

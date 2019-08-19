@@ -1,0 +1,40 @@
+function [dV,dS] = Bando_FTL_Accel_RK_Step(RingRoad_Params,Bando_Params,vv_l,s)
+
+dt = RingRoad_Params.dt;
+n = RingRoad_Params.number_cars;
+
+dV = zeros(n,1);
+dS = zeros(n,1);
+
+v_l = v(end);
+
+dV(1) = new_state
+
+
+
+for i=1:n
+    k1 = [Bando_FTL_Accel(Bando_Params(1,:),v(1),v_l,s(1)),v_l-v]*dt;
+    k2 = [Bando_FTL_Accel(Bando_Params(1,:),v(1)+k1(1)/2,v_l,s(1)+k1(2)/2),v_l-v(1)+k1(1)/2]*dt;
+    k3 = [Bando_FTL_Accel(Bando_Params(1,:),v(1)+k2(1)/2,v_l,s(1)+k2(2)/2),v_l-v(1)+k2(1)/2]*dt;
+    k4 = [Bando_FTL_Accel(Bando_Params(1,:),v(1)+k3(1),v_l,s(1)+k3(2)),v_l-v(1)+k3(1)]*dt;
+
+    new_state = [v(1),s(1)] + k1/6 + k2/3 + k3/3 + k4/6;
+
+
+
+b = Bando_Params(1);
+a = Bando_Params(2);
+vm = Bando_Params(3);
+d0 = Bando_Params(4);
+x = Bando_Params(5);
+y = Bando_Params(6);
+
+% V = @(s) (tanh(s./x-y*(d0)) + 1)*(vm/2);
+
+V = @(d) vm*(tanh(d./d0-2)+tanh(2))/(1+tanh(2));
+
+accel = a*(V(s)-v) + b*((v_l - v)./(s));
+% accel = a*(V(s)-v) + b*((v_l - v));
+
+end
+

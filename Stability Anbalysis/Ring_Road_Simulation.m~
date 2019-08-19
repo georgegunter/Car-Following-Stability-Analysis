@@ -1,8 +1,11 @@
-clear;clc
-
+% clear;clc
+clc
 %% Contains the ringroad parameters:
-RingRoad_Params.Road_Length = 75;
-RingRoad_Params.number_cars = 10;
+
+s_max_unstable  = 4.4468; % Solved via gradient method for given model params
+
+RingRoad_Params.Road_Length = 23*s_max_unstable;
+RingRoad_Params.number_cars = 22;
 RingRoad_Params.number_lanes = 2;
 RingRoad_Params.trajectory_time = 75;
 RingRoad_Params.dt = .1;
@@ -19,7 +22,7 @@ numSteps = tf/dt;
 b = 20; 
 a = 0.5; 
 vm = 9.72; 
-d0 = 4.5;
+d0 = 2.23;
 x = 1.5;
 y = 2;
 
@@ -103,12 +106,16 @@ for t=1:numSteps
     end
     
     
-    if(want_Noise)
-        accel_vals = accel_vals + normrnd(0,0,size(accel_vals));
-    end
+
     
     stateMat(:,2) = stateMat(:,2)+accel_vals*dt;
     stateMat(:,1) = stateMat(:,1)+stateMat(:,2)*dt;
+    
+    
+        if(want_Noise)
+        accel_vals = accel_vals + normrnd(0,0,size(accel_vals));
+    end
+    
      
     for carNum=1:n
         if(stateMat(carNum,1)>L)
@@ -119,19 +126,15 @@ for t=1:numSteps
     posVals(:,t) = stateMat(:,1);
     speedVals(:,t) = stateMat(:,2);
     for c=1:n-1
-        s = posVals(c+1,t) - posVals(c,t);
-        if(s<0)
+        spacingVals(c,t) = mod(posVals(c+1,t) - posVals(c,t),L);
+    end
+    
+    spacingVals(end,t) = mod(posVals(c+1,t) - posVals(c,t),L);
             
         
         
-    end
-    
-    spacingVals(n,t) = posVals
-        
-    
-    
-
 end
+       
 
 %% Display the ring-road simulation:
 
@@ -228,14 +231,14 @@ ylabel('Speed')
 
 %% String Stability:
 
-s_vals = 0:.1:30;
-
-lambda_vals = string_stability(Params(,s_vals);
-
-figure()
-hold on
-plot(s_vals,lambda_vals,'LineWidth',2)
-plot(s_vals,zeros(size(s_vals)),'k--','LineWidth',.5)
+% s_vals = 0:.1:30;
+% 
+% lambda_vals = string_stability(Params(,s_vals);
+% 
+% figure()
+% hold on
+% plot(s_vals,lambda_vals,'LineWidth',2)
+% plot(s_vals,zeros(size(s_vals)),'k--','LineWidth',.5)
 
 
 
