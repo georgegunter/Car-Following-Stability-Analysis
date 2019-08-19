@@ -6,7 +6,7 @@ V_prime = @(s) vm/(1+tanh(2))*(1-tanh(s/d0-2).^2);
 
 f_s = a*V_prime(s);
 f_v = -a;
-f_dV = s*(1/b);
+f_dV = b*(s.^-2);
 
 
 % f_s = ((Bando_FTL_Accel(p,v,v,s+.01)-(Bando_FTL_Accel(p,v,v,s)))./.01);

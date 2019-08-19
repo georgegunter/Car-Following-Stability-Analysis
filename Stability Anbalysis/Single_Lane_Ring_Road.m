@@ -28,17 +28,45 @@ Spacing_Values(:,1) = Road_Length/number_cars;
 Speed_Values(:,1) = V(Road_Length/number_cars);
 Position_Values(:,1) = cumsum(Spacing_Values(:,1));
 
+wantNoise = true;
+
 
 %% Run through the simulation:
 
 % Car 1 follows car n:
 
 for t=2:numSteps
+    
+    
     v = Speed_Values(:,t-1);
-    v_l = zeros(size(Speed_Values));
+    v_l = v*0;
     v_l(1) = v(end);
     v_l(2:end) = v(1:end-1);  
     s = Spacing_Values(:,t-1);
+    p = Position_Values(:,t-1);
+    
+    [dV,dS,dP] = Bando_FTL_RK_Step(RingRoad_Params,Bando_Params,v,v_l,s,p);
+    
+    v_new = v + dV;
+    s_new = s + dS;
+    p_new = p + dP;
+    
+    
+    if(wantNoise):
+        
+    
+    Speed_Values(:,t) = v_new;
+    Spacing_Values(:,t) = s_new;
+    Position_Values(:,t) = p_new;
+    
+end
+
+%% Plot Results:
+
+figure()
+plot(
+    
+    
     
     
     

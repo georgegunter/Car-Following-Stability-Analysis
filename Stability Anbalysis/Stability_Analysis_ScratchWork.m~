@@ -2,7 +2,7 @@
 
 p = [20,.5,9.72,2.23];
 
-s_vals = 1:.1:10;
+s_vals = 0:.1:30;
 
 lambda_vals = string_stability(p,s_vals);
 
@@ -10,7 +10,7 @@ figure()
 hold on
 plot(s_vals,lambda_vals,'LineWidth',2)
 plot(s_vals,zeros(size(s_vals)),'k--','LineWidth',.5)
-plot(4.86,string_stability(p,4.86),'r*','MarkerSize',15)
+plot(4.86,
 %% Look at V(s):
 b=p(1);a=p(2);vm=p(3);d0=p(4);
 V = @(s) vm*(tanh(s./d0-2)+tanh(2))/(1+tanh(2));

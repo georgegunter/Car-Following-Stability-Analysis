@@ -31,7 +31,31 @@ Position_Values(:,1) = cumsum(Spacing_Values(:,1));
 
 %% Run through the simulation:
 
+% Car 1 follows car n:
+
 for t=2:numSteps
+    
+    
+    v = Speed_Values(:,t-1);
+    v_l = v*0;
+    v_l(1) = v(end);
+    v_l(2:end) = v(1:end-1);  
+    s = Spacing_Values(:,t-1);
+    p = Position_Values(:,t-1);
+    
+    [dV,dS,dP] = Bando_FTL_RK_Step(RingRoad_Params,Bando_Params,v,v_l,s,p);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     

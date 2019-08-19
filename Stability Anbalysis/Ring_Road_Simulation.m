@@ -5,14 +5,12 @@ close all
 
 b = 20; 
 a = 0.5; 
-% vm = 9.72;
-vm = 20;
+vm = 9.72;
 d0 = 2.23;
 
 obj_func = @(d) -string_stability([b,a,vm,d0],d);
 
-
-s_max_unstable  = fminunc(obj_func,0); % Solved via gradient method for given model params
+s_max_unstable  = fminunc(obj_func,5); % Solved via gradient method for given model params
 
 %% Contains the ringroad parameters:
 
@@ -102,13 +100,13 @@ for t=1:numSteps
     
     accel_vals = accelCalc(Params,laneMat,stateMat,RingRoad_Params);    
     
-%     t_decel = 10;
-%     amount_decel = (v_star-.1)/t_decel;
-%     
-%     if(time >= 0 && time <= t_decel)
-%         accel_vals(1) = -amount_decel;
-%         disp('Causing Breaking Event')
-%     end     
+    t_decel = 10;
+    amount_decel = (v_star-.1)/t_decel;
+    
+    if(time >= 0 && time <= t_decel)
+        accel_vals(1) = -amount_decel;
+        disp('Causing Breaking Event')
+    end     
     
 
 
@@ -120,9 +118,9 @@ for t=1:numSteps
     
     stateMat(:,1) = stateMat(:,1)+stateMat(:,2)*dt;
  
-    if(mod(t,round(1/dt))==0)
-        stateMat(:,1) = stateMat(:,1) + randntrunc(1,n,3)'*.25;
-    end
+%     if(mod(t,round(1/dt))==0)
+%         stateMat(:,1) = stateMat(:,1) + randntrunc(1,n,3)'*.25;
+%     end
     
      
     for carNum=1:n
