@@ -14,10 +14,10 @@ s_max_unstable  = fminunc(obj_func,5); % Solved via gradient method for given mo
 
 %% Contains the ringroad parameters:
 
-RingRoad_Params.Road_Length = 23*s_max_unstable;
+RingRoad_Params.Road_Length = 111.7961;
 RingRoad_Params.number_cars = 22;
 RingRoad_Params.number_lanes = 2;
-RingRoad_Params.trajectory_time = 75;
+RingRoad_Params.trajectory_time = 500;
 RingRoad_Params.dt = .1;
 
 
@@ -111,15 +111,12 @@ for t=1:numSteps
 
 
     stateMat(:,2) = stateMat(:,2)+accel_vals*dt;% Euler Step
-
-    
-    
     
     
     stateMat(:,1) = stateMat(:,1)+stateMat(:,2)*dt;
  
-%     if(mod(t,round(1/dt))==0)
-%         stateMat(:,1) = stateMat(:,1) + randntrunc(1,n,3)'*.25;
+%     if(mod(t,round(1/dt))==0 && (t < round(numSteps/2)))
+%         stateMat(:,1) = stateMat(:,1) + randntrunc(1,n,3)'*.1;
 %     end
     
      
@@ -232,6 +229,8 @@ figure()
 plot(speedVals')
 title('Speed Values')
 ylabel('Speed')
+
+%% Look at Speed Space
 
 %% Look at String Stability:
 

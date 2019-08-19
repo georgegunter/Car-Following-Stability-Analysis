@@ -25,15 +25,15 @@ Position_Values = zeros(number_cars,numSteps);
 Spacing_Values = zeros(number_cars,numSteps);
 
 Spacing_Values(:,1) = Road_Length/number_cars;
-Speed_Values(:,1) = V(Road_Length/number_cars);
+% Speed_Values(:,1) = V(Road_Length/number_cars);
 Position_Values(:,1) = cumsum(Spacing_Values(:,1));
 
-wantNoise = true;
+wantNoise = false;
 
 
 %% Run through the simulation:
 
-% Car 1 follows car n:
+% Car n follows car 1:
 
 for t=2:numSteps
     
@@ -52,7 +52,13 @@ for t=2:numSteps
     p_new = p + dP;
     
     
-    if(wantNoise):
+    if(wantNoise)
+        if(mod(t,round(1/dt))==0)
+            p_new = p_new + randntrunc(1,number_cars,3)'*.25;
+            s_new(1) = mod(p_new(1) - p_new(end),Road_Length);
+            s_new(2:end) = mod(diff(p_new),Road_Length);
+        end
+    end
         
     
     Speed_Values(:,t) = v_new;
@@ -62,26 +68,18 @@ for t=2:numSteps
 end
 
 %% Plot Results:
+figure()
+plot(Spacing_Values')
+title('Spacings')
 
 figure()
-plot(
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-end
+plot(Speed_Values')
+title('Speeds')
 
-%% Plot Results:
+figure()
+plot(mod(Position_Values',Road_Length),'b.','MarkerSize',10)
+title('Phase Diagram')
+xlim([0 numSteps])
+ylim([0 Road_Length])
 
 

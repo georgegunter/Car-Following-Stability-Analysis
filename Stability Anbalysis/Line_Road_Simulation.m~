@@ -16,9 +16,9 @@ init_spacing = 4.68;
 
 lead_speed = V(init_spacing); % Need to have optimal velocity func in work space
 
-% leader_speeds = ones(1,numSteps)*lead_speed;
+leader_speeds = ones(1,numSteps)*lead_speed;
 
-leader_speeds = sin(linspace(0,simulation_time,numSteps))+lead_speed;
+leader_speeds = leader_speeds + randntrunc(1,numSteps,1)*.25;
 
 follower_speeds = zeros(number_vehicles,numSteps);
 positions = zeros(number_vehicles,numSteps);

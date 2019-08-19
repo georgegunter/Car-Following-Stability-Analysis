@@ -1,7 +1,4 @@
-function [dV,dS,dP] = Bando_FTL_RK_Step(RingRoad_Params,Bando_Params,v,v_l,s,p)
-
-dt = RingRoad_Params.dt;
-n = RingRoad_Params.number_cars;
+function [dV,dS,dP] = Bando_FTL_RK_Step(n,dt,Bando_Params,v,v_l,s)
 
 dV = zeros(n,1);
 dS = zeros(n,1);
