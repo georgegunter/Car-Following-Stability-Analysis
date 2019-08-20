@@ -103,10 +103,10 @@ for t=1:numSteps
     t_decel = 10;
     amount_decel = (v_star-.1)/t_decel;
     
-    if(time >= 0 && time <= t_decel)
-        accel_vals(1) = -amount_decel;
-        disp('Causing Breaking Event')
-    end     
+%     if(time >= 0 && time <= t_decel)
+%         accel_vals(1) = -amount_decel;
+%         disp('Causing Breaking Event')
+%     end     
     
 
 
@@ -115,9 +115,9 @@ for t=1:numSteps
     
     stateMat(:,1) = stateMat(:,1)+stateMat(:,2)*dt;
  
-%     if(mod(t,round(1/dt))==0 && (t < round(numSteps/2)))
-%         stateMat(:,1) = stateMat(:,1) + randntrunc(1,n,3)'*.1;
-%     end
+    if(mod(t,round(1/dt))==0 && (t < round(numSteps/2)))
+        stateMat(:,1) = stateMat(:,1) + randntrunc(1,n,3)'*.1;
+    end
     
      
     for carNum=1:n

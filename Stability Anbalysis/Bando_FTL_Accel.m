@@ -9,7 +9,7 @@ d0 = Params(4);
 
 V = @(d) vm*(tanh(d./d0-2)+tanh(2))/(1+tanh(2));
 
-accel = a*(V(s)-v) + b*((v_l - v)./(s.^2));
+accel = a*(V(s)-v) + b*((v_l - v)./(s));
 
 
 end
