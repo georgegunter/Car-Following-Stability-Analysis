@@ -1,25 +1,23 @@
+function [amp_Factor] = find_Amp_Factor(Params,s_eq,omega)
+
 %% Performs a line-road simluation of some number of vehicles:
 clc
-number_vehicles = 22;
-dt = .01;
-
-
-
-omega = .01;
+number_vehicles = 1;
+dt = .1;
 
 simulation_time = 2*pi/omega*5;
 
 
 numSteps = round(simulation_time/dt);
 
-b = 20; 
-a = 0.5; 
-vm = 9.72; 
-d0 = 2.23;
+b = Params(1);
+a = Params(2);
+vm = Params(3);
+d0 = Params(4);
 
 V = @(d) vm*(tanh(d./d0-2)+tanh(2))/(1+tanh(2));
 
-init_spacing = 1;
+init_spacing = s_eq;
 
 lead_speed = V(init_spacing); % Need to have optimal velocity func in work space
 % 
@@ -37,32 +35,8 @@ follower_speeds(:,1) = leader_speeds(1);
 spacings(:,1) = init_spacing;
 positions(:,1) = fliplr(cumsum(spacings(:,1))')';
 
-
-%% Individual vehicle driving parameters:
-
-wantUniform = true; % Gives a homogeneous platoon
-
-Params = zeros(number_vehicles,4);
-if(wantUniform)
-    for i=1:number_vehicles
-        Params(i,:) = [b,a,vm,d0];
-    end
-else 
-    % Adds noise around the parameter set to create variability in driving
-    % behavior:
-    for i=1:number_vehicles
-        b_i = b + normrnd(0,1);
-        a_i = a + normrnd(0,.1);
-        vm_i = vm + normrnd(0,1.5);
-        d0_i = d0 + normrnd(0,.3);
-        Params(i,:) = [b_i,a_i,vm_i,d0_i];
-    end
-end
-
-
 %% Perform simulation:
 
-time = 0;
 for t=2:numSteps
     %% Do integration steps:
       
@@ -89,16 +63,6 @@ for t=2:numSteps
 
 end
 
-
-%% Plot Results:
-
-figure()
-hold on
-plot(follower_speeds','b','MarkerSize',1);
-plot(leader_speeds,'r','MarkerSize',2);
-
-
-figure()
-plot(spacings','b','MarkerSize',1);
-
+amp_Factor = max(follower_speeds(1,floor(numSteps*4/5):end))/max(leader_speeds(floor(numSteps*4/5):end));
+end
 
