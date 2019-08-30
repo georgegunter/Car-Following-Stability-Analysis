@@ -1,10 +1,26 @@
 function [dV,dS,dP] = Bando_FTL_RK_Step(n,dt,Bando_Params,v,v_l,s)
 
+
+% THIS IS BROKEN...
+
 dV = zeros(n,1);
 dS = zeros(n,1);
 dP = zeros(n,1);
 
 for i=1:n
+    %% dV
+    k1 = Bando_FTL_Accel(Bando_Params,v(i),v_l(i),s(i))*dt;
+    k2 = 
+    
+    %% dS
+    
+    %% dP
+    
+   
+    
+    
+    
+    
     k1 = [Bando_FTL_Accel(Bando_Params,v(i),v_l(i),s(i)),v_l(i)-v(i),v(i)]*dt;
     k2 = [Bando_FTL_Accel(Bando_Params,v(i)+k1(1)/2,v_l(i),s(i)+k1(2)/2),v_l(i)-v(1)+k1(1)/2,v(i)+k1(3)/2]*dt;
     k3 = [Bando_FTL_Accel(Bando_Params,v(i)+k2(1)/2,v_l(i),s(i)+k2(2)/2),v_l(i)-v(i)+k2(1)/2,v(i)+k2(3)/2]*dt;

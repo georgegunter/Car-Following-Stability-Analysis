@@ -61,7 +61,7 @@ initial_spacings = ones(n,1)*s_star;
 
 stateMat = zeros(n,2); % Form: [position,velocity]
 stateMat(:,1) = cumsum(initial_spacings);
-stateMat(:,2) = v_star;
+stateMat(:,2) = 0;
 
 laneMat = ones(n,1);
 
@@ -120,12 +120,14 @@ for t=1:numSteps
     end
     
      
-    for carNum=1:n
-        if(stateMat(carNum,1)>L)
-         stateMat(carNum,1) = stateMat(carNum,1)-L;
-        end
-    end
-    
+%     for carNum=1:n
+%         if(stateMat(carNum,1)>L)
+%          stateMat(carNum,1) = stateMat(carNum,1)-L;
+%         end
+%     end
+
+    stateMat(:,1) = mod(stateMat(:,1),L); % Does this work??
+
     posVals(:,t) = stateMat(:,1);
     speedVals(:,t) = stateMat(:,2);
     for c=1:n-1
