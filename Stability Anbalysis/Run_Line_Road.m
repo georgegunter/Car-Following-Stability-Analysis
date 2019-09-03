@@ -1,11 +1,9 @@
-function [Speeds,Positions,Spacings] = Run_Ring_Road(RingRoad_Params,params,s_init,p_init,v_init)
+function [Speeds,Positions,Spacings] = Run_Line_Road(LineRoad_Params,params,s_init,p_init,v_init,v_lead)
 %% Specify Ring Road:
-L = RingRoad_Params.Road_Length;
-n = RingRoad_Params.number_cars;
-tf = RingRoad_Params.trajectory_time; % final time of trajectory computation
-dt = RingRoad_Params.dt; % Time step [s]
+n = LineRoad_Params.number_cars;
+tf = LineRoad_Params.simulation_time; % final time of trajectory computation
+dt = LineRoad_Params.dt; % Time step [s]
 numSteps = tf/dt;
-
 
 %% Initialize:
 
@@ -23,10 +21,10 @@ Spacings(:,1) = s;
 
 %% Perform Simulation:
 
-% time = 0;
+time = 0;
 for t=2:numSteps
     %% Do integration steps:
-%     time = time + dt;
+    time = time + dt;
     
 %     t_decel = 10;
 %     amount_decel = (v_star-.1)/t_decel;
@@ -35,31 +33,27 @@ for t=2:numSteps
 %         disp('Causing Breaking Event')
 %     end     
     
-
+    % Last index follows first
     v_l = zeros(n,1);
-    v_l(1) = v(end);
+    v_l(1) = v_lead(t);
     v_l(2:end) = v(1:end-1);
-
+   
     a = Bando_FTL_Accel(params,v,v_l,s); 
     
     p = p+v*dt;
     
-    s = s+(v_l-v)*dt;
-    
     v = v+a*dt;% Euler Step
     
+    s = s+(v_l-v)*dt;
+    
     % Add Noise to purturb state from equilibrium:
-%     if(mod(t,round(1/dt))==0 && (t < round(numSteps/2)))
-%         p = p + randntrunc(1,n,3)'*.1;
-%     end
-    
-    p = mod(p,L);
-    
-    for c=1:n-1
-        s(c) = mod(p(c+1) - p(c),L);
+    if(mod(t,round(1/dt))==0 && (t < round(numSteps/2)))
+        p = p + randntrunc(1,n,3)'*.1;
     end
-    
-    s(end) = mod(p(c+1) - p(c),L);
+
+%     if(mod(t,round(1/dt))==0 && (time < 10))
+%         p = p + randntrunc(1,n,3)'*.5;
+%     end
     
     
     Positions(:,t) = p;

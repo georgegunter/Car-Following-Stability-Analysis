@@ -1,8 +1,8 @@
 %% String Stability:
 
-p = [20,.5,9.72,2.23];
+p = [20,.5,20.72,2.23];
 
-s_vals = 1:.1:10;
+s_vals = 1:.1:20;
 
 lambda_vals = string_stability(p,s_vals);
 

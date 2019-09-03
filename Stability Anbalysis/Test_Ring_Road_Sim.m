@@ -5,18 +5,21 @@ a = 0.5;
 vm = 9.72;
 d0 = 2.23;
 params = [b,a,vm,d0];
-RingRoad_Params.Road_Length = 111.7961;
-RingRoad_Params.number_cars = 20;
 
-L_phys = 205.9363;
-l_car = 4.5;
-L_Eff = 
+RingRoad_Params.number_cars = 22;
+n = RingRoad_Params.number_cars;
+
+L_phys = 230;
+L_car = 4.5;
+L_Eff = L_phys - L_phys - n*L_car;
 
 RingRoad_Params.trajectory_time = 500;
 RingRoad_Params.dt = .05;
+RingRoad_Params.Road_Length = L_Eff;
+
 
 L = RingRoad_Params.Road_Length;
-n = RingRoad_Params.number_cars;
+
 tf = RingRoad_Params.trajectory_time; % final time of trajectory computation
 dt = RingRoad_Params.dt; % Time step [s]
 numSteps = tf/dt;
